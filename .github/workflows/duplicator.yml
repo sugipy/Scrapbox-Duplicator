@@ -20,6 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v1.46.3
 
       - name: Export from Scrapbox(/PROJECT_NAME to PROJECT_NAME.json)
         run: deno run --allow-net=scrapbox.io --allow-read=./ --allow-write --allow-env index.ts
