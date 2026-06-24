@@ -10,6 +10,14 @@ assertString(sid);
 assertString(exportingProjectName);
 assertString(importingProjectName);
 
+// ★追加①: 書き込みAPIのOrigin検証を通すため、fetchにOrigin/Refererを付与する
+const fetchWithOrigin = (input: string | Request, init?: RequestInit) => {
+  const headers = new Headers(init?.headers);
+  headers.set("Origin", "https://scrapbox.io");
+  headers.set("Referer", "https://scrapbox.io/");
+  return fetch(input, { ...init, headers });
+};
+
 console.log(`Exporting a json file from "/${exportingProjectName}"...`);
 const result = await exportPages(exportingProjectName, {
   sid,
@@ -47,6 +55,7 @@ if (importingPages.length === 0) {
     pages: importingPages,
   }, {
     sid,
+    fetch: fetchWithOrigin, // ★追加②: Origin付きfetchを使わせる
   });
   if (!result.ok) {
     const error = new Error();
