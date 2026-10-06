@@ -1,0 +1,19 @@
+name: keepalive
+# GitHubは60日間コミットがないリポジトリの定期実行を自動停止する。
+# 月1回空コミットを入れて、Duplicater（sugipy→sugipy01転載）が止まらないようにする。
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *' # 毎月1日 JST 9:00
+permissions:
+  contents: write
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "keepalive: $(date -u +%Y-%m-%d)"
+          git push
